@@ -1,0 +1,18 @@
+http:
+  host: "localhost"
+  port: "8089"
+
+db:
+  host: "mudb.mule-training.com"
+  port: "3306"
+  user: "mule"
+  password: "mule"
+  database: "training"
+  
+american:
+  host: "mu.mule-training.com"
+  port: "80"
+  basepath: "/american"
+  protocol: "HTTP"
+  client_id: "c05ddced9f1442a5b4f46335b810f2f1"
+  client_secret: "D86c96AC942346Ccb51D50B00ED5a4B4"
