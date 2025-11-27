@@ -121,12 +121,4 @@ output application/json
             </on-error-propagate>
         </error-handler>
     </flow>
-    <flow name="get:\flights:api-config">
-		<set-variable value="#[message.attributes.queryParams.destination]" doc:name="destination" doc:id="7fe1767f-639b-49c2-bdbd-fd5e253f0287" variableName="destination"/>
-		<american-flights-api:get-flights doc:name="Get flights" doc:id="d07434d9-34ea-4c81-8442-57f67216228d" config-ref="American_Flights_API_Config" client-id="${american.client_id}" client-secret="${american.client_secret}" destination="#[vars.destination]"/>
-    </flow>
-    <flow name="get:\flights\(flightId):api-config">
-		<set-variable value="#[attributes.uriParams.flightId]" doc:name="flightId" doc:id="2ec3c80a-85c1-4e85-937c-437bbd609570" variableName="flightId"/>
-		<american-flights-api:get-flight-by-id doc:name="Get flight by id" doc:id="0a394269-481b-46c9-8c2c-6ccab93936f7" config-ref="American_Flights_API_Config" id="#[vars.flightId]" client-id="${american.client_id}" client-secret="${american.client_secret}"/>
-    </flow>
 </mule>

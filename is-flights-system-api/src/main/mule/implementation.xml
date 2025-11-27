@@ -6,4 +6,13 @@
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
 http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
 http://www.mulesoft.org/schema/mule/american-flights-api http://www.mulesoft.org/schema/mule/american-flights-api/current/mule-american-flights-api.xsd">
+
+<flow name="get:\flights:api-config">
+		<set-variable value="#[message.attributes.queryParams.destination]" doc:name="destination" doc:id="fe860884-700b-49da-83f4-fe6254fab111" variableName="destination"/>
+		<american-flights-api:get-flights doc:name="Get flights" doc:id="fc4290f6-91c5-4bde-8bd7-e125166ee122" config-ref="American_Flights_API_Config" client-id="${american.client_id}" client-secret="${american.client_secret}" destination="#[vars.destination]"/>
+    </flow>
+    <flow name="get:\flights\(flightId):api-config">
+		<set-variable value="#[attributes.uriParams.flightId]" doc:name="flightId" doc:id="755bb614-870d-432b-a946-12a0ae826cf0" variableName="flightId"/>
+		<american-flights-api:get-flight-by-id doc:name="Get flight by id" doc:id="8a6960a0-c723-4f17-9c8a-b6c903bf1781" config-ref="American_Flights_API_Config" id="#[vars.flightId]" client-id="${american.client_id}" client-secret="${american.client_secret}"/>
+    </flow>
 </mule>
