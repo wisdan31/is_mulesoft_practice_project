@@ -1,18 +1,69 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:american-flights-api="http://www.mulesoft.org/schema/mule/american-flights-api" xmlns:db="http://www.mulesoft.org/schema/mule/db"
-	xmlns:http="http://www.mulesoft.org/schema/mule/http"
-	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:american-flights-api="http://www.mulesoft.org/schema/mule/american-flights-api"
+	xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
 http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
-http://www.mulesoft.org/schema/mule/american-flights-api http://www.mulesoft.org/schema/mule/american-flights-api/current/mule-american-flights-api.xsd">
+http://www.mulesoft.org/schema/mule/american-flights-api http://www.mulesoft.org/schema/mule/american-flights-api/current/mule-american-flights-api.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
 
 <flow name="get:\flights:api-config">
 		<set-variable value="#[message.attributes.queryParams.destination]" doc:name="destination" doc:id="fe860884-700b-49da-83f4-fe6254fab111" variableName="destination"/>
-		<american-flights-api:get-flights doc:name="Get flights" doc:id="fc4290f6-91c5-4bde-8bd7-e125166ee122" config-ref="American_Flights_API_Config" client-id="${american.client_id}" client-secret="${american.client_secret}" destination="#[vars.destination]"/>
+		<db:select doc:name="Select flights" doc:id="4c554476-06f1-4f50-8167-ebb356b8152f" config-ref="Database_Config">
+			<db:sql ><![CDATA[SELECT * FROM flights
+WHERE (:destination IS NULL OR toAirport = :destination)
+]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{ destination: vars.destination}]]]></db:input-parameters>
+		</db:select>
+		<ee:transform doc:name="Transform Message" doc:id="61eb8693-6148-482a-a7e1-da88c562ad50" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload map ( payload01 , indexOfPayload01 ) -> {
+	ID: payload01.ID,
+	code: payload01.code1 ++ payload01.code2,
+	price: payload01.price default 0,
+	departureDate: payload01.takeOffDate as String default "",
+	origin: payload01.fromAirport default "",
+	destination: payload01.toAirport default "",
+	emptySeats: payload01.seatsAvailable default 0,
+	plane: {
+		"type": payload01.planeType default "",
+		totalSeats: payload01.totalSeats default 0
+	},
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
     </flow>
     <flow name="get:\flights\(flightId):api-config">
 		<set-variable value="#[attributes.uriParams.flightId]" doc:name="flightId" doc:id="755bb614-870d-432b-a946-12a0ae826cf0" variableName="flightId"/>
-		<american-flights-api:get-flight-by-id doc:name="Get flight by id" doc:id="8a6960a0-c723-4f17-9c8a-b6c903bf1781" config-ref="American_Flights_API_Config" id="#[vars.flightId]" client-id="${american.client_id}" client-secret="${american.client_secret}"/>
+		<db:select doc:name="Select flight" doc:id="51772ea4-5009-4f9d-862a-b64df44d24fd" config-ref="Database_Config">
+			<db:sql ><![CDATA[SELECT * FROM american
+WHERE ID = :Id;]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{ Id: vars.flightId }]]]></db:input-parameters>
+		</db:select>
+		<ee:transform doc:name="Transform Message" doc:id="35d315cc-125c-4087-a7bf-27c08b1a6d32" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload map (flight) -> {
+	ID: flight.ID,
+	code: (flight.code1 default "") ++ (flight.code2 default ""),
+	price: flight.price default 0,
+	departureDate: flight.takeOffDate as String default "",
+	origin: flight.fromAirport default "",
+	destination: flight.toAirport default "",
+	emptySeats: flight.seatsAvailable default 0,
+	plane: {
+		"type": flight.planeType default "",
+		totalSeats: flight.totalSeats default 0
+	}
+}
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
     </flow>
 </mule>
