@@ -52,6 +52,7 @@ payload map ( payload01 , indexOfPayload01 ) -> {
 WHERE ID = :Id;]]></db:sql>
 			<db:input-parameters ><![CDATA[#[{ Id: vars.flightId }]]]></db:input-parameters>
 		</db:select>
+		<validation:is-not-empty-collection doc:name="Is not empty collection" doc:id="d638384b-f576-46f6-8306-8e211fc54b34" message='Flight with this ID not found.'/>
 		<ee:transform doc:name="Transform Message" doc:id="35d315cc-125c-4087-a7bf-27c08b1a6d32" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
@@ -73,5 +74,11 @@ payload map (flight) -> {
 ]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
+		<error-handler >
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="69eff4d0-d73d-4a5d-bbd6-4dc2aacb19f2" >
+				<set-payload value='#[output application/json&#10;---&#10;{&#10;  "message": error.description&#10;}]' doc:name="Set Payload" doc:id="46a33ea1-7aae-4f71-ba6b-7044265d4d62" />
+				<set-variable value="404" doc:name="httpStatus" doc:id="ac3bf372-38d7-4b55-9505-3c436644f88f" variableName="httpStatus"/>
+			</on-error-propagate>
+		</error-handler>
     </flow>
 </mule>
