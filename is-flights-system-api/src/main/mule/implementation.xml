@@ -38,6 +38,12 @@ payload map ( payload01 , indexOfPayload01 ) -> {
 }]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
+		<error-handler >
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="5f85880e-3c12-4be3-a4bb-e07d3b6741ad" type="VALIDATION:INVALID_BOOLEAN">
+				<set-payload value='#[output application/json&#10;---&#10;{&#10;  "message": error.description&#10;}]' doc:name="error.message" doc:id="772dbfa5-31a2-49f2-9105-6656d11d505e" />
+				<set-variable value="400" doc:name="httpStatus" doc:id="e43d388e-3ea4-4dd7-a4a9-4908b04791c4" variableName="httpStatus"/>
+			</on-error-propagate>
+		</error-handler>
     </flow>
     <flow name="get:\flights\(flightId):api-config">
 		<set-variable value="#[attributes.uriParams.flightId]" doc:name="flightId" doc:id="755bb614-870d-432b-a946-12a0ae826cf0" variableName="flightId"/>
