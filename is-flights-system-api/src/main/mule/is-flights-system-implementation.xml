@@ -9,7 +9,7 @@ http://www.mulesoft.org/schema/mule/american-flights-api http://www.mulesoft.org
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
 http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd">
 
-<flow name="get:\flights:api-config">
+<flow name="getFlights" doc:id="034e2d97-e0ea-4a33-8a1f-06811f717f75">
 		<set-variable value="#[message.attributes.queryParams.destination]" doc:name="destination" doc:id="fe860884-700b-49da-83f4-fe6254fab111" variableName="destination"/>
 		<validation:is-true doc:name="Destination exists" doc:id="6b9d6192-4901-4312-a7ae-86f0068e9683" message="#[&quot;Invalid destination &quot; ++ (vars.destination default ' ')]" expression='#[(vars.destination == null) or (["SFO", "LAX", "CLE"] contains vars.destination)]'/>
 		<db:select doc:name="Select flights" doc:id="4c554476-06f1-4f50-8167-ebb356b8152f" config-ref="Database_Config">
