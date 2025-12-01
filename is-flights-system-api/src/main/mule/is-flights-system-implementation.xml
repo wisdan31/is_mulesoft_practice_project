@@ -9,16 +9,15 @@ http://www.mulesoft.org/schema/mule/american-flights-api http://www.mulesoft.org
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
 http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd">
 
-<flow name="getFlights" doc:id="034e2d97-e0ea-4a33-8a1f-06811f717f75">
-		<set-variable value="#[message.attributes.queryParams.destination]" doc:name="destination" doc:id="fe860884-700b-49da-83f4-fe6254fab111" variableName="destination"/>
-		<validation:is-true doc:name="Destination exists" doc:id="6b9d6192-4901-4312-a7ae-86f0068e9683" message="#[&quot;Invalid destination &quot; ++ (vars.destination default ' ')]" expression='#[(vars.destination == null) or (["SFO", "LAX", "CLE"] contains vars.destination)]'/>
-		<db:select doc:name="Select flights" doc:id="4c554476-06f1-4f50-8167-ebb356b8152f" config-ref="Database_Config">
+<sub-flow name="getFlights" doc:id="abdaf767-c6fd-4821-a672-452a584a0fb0" >
+		<set-variable value="#[message.attributes.queryParams.destination]" doc:name="destination" doc:id="e639483f-d9cb-4a46-8eba-b4f3ee4eac66" variableName="destination" />
+		<db:select doc:name="Select flights" doc:id="e6ee4a8f-dc34-409f-8cb1-a2cd77ad21fa" config-ref="Database_Config" >
 			<db:sql ><![CDATA[SELECT * FROM flights
 WHERE (:destination IS NULL OR toAirport = :destination)
 ]]></db:sql>
 			<db:input-parameters ><![CDATA[#[{ destination: vars.destination}]]]></db:input-parameters>
 		</db:select>
-		<ee:transform doc:name="Transform Message" doc:id="61eb8693-6148-482a-a7e1-da88c562ad50" >
+		<ee:transform doc:name="Transform Message" doc:id="a85b0f15-f7be-4821-9a73-152f2a710204" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
@@ -39,13 +38,7 @@ payload map (flight) -> {
 ]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
-		<error-handler >
-			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="5f85880e-3c12-4be3-a4bb-e07d3b6741ad" type="VALIDATION:INVALID_BOOLEAN">
-				<set-payload value='#[output application/json --- { "message": error.description }]' doc:name="error.message" doc:id="772dbfa5-31a2-49f2-9105-6656d11d505e" />
-				<set-variable value="400" doc:name="httpStatus" doc:id="e43d388e-3ea4-4dd7-a4a9-4908b04791c4" variableName="httpStatus"/>
-			</on-error-propagate>
-		</error-handler>
-    </flow>
+	</sub-flow>
     <flow name="getFlightById" doc:id="bdd3e4b2-1035-4336-a74b-ac1dcf8e1719">
 		<set-variable value="#[attributes.uriParams.flightId]" doc:name="flightId" doc:id="755bb614-870d-432b-a946-12a0ae826cf0" variableName="flightId"/>
 		<db:select doc:name="Select flight" doc:id="51772ea4-5009-4f9d-862a-b64df44d24fd" config-ref="Database_Config">
