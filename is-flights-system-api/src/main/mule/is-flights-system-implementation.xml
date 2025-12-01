@@ -9,7 +9,7 @@ http://www.mulesoft.org/schema/mule/american-flights-api http://www.mulesoft.org
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
 http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd">
 
-<flow name="get:\flights:api-config">
+<flow name="getFlights" doc:id="034e2d97-e0ea-4a33-8a1f-06811f717f75">
 		<set-variable value="#[message.attributes.queryParams.destination]" doc:name="destination" doc:id="fe860884-700b-49da-83f4-fe6254fab111" variableName="destination"/>
 		<validation:is-true doc:name="Destination exists" doc:id="6b9d6192-4901-4312-a7ae-86f0068e9683" message="#[&quot;Invalid destination &quot; ++ (vars.destination default ' ')]" expression='#[(vars.destination == null) or (["SFO", "LAX", "CLE"] contains vars.destination)]'/>
 		<db:select doc:name="Select flights" doc:id="4c554476-06f1-4f50-8167-ebb356b8152f" config-ref="Database_Config">
@@ -25,7 +25,7 @@ output application/json
 ---
 payload map ( payload01 , indexOfPayload01 ) -> {
 	ID: payload01.ID,
-	code: payload01.code1 ++ payload01.code2,
+	code: (payload01.code1 default "") ++ (payload01.code2 default ""),
 	price: payload01.price default 0,
 	departureDate: payload01.takeOffDate as String default "",
 	origin: payload01.fromAirport default "",
@@ -45,7 +45,7 @@ payload map ( payload01 , indexOfPayload01 ) -> {
 			</on-error-propagate>
 		</error-handler>
     </flow>
-    <flow name="get:\flights\(flightId):api-config">
+    <flow name="getFlightById" doc:id="bdd3e4b2-1035-4336-a74b-ac1dcf8e1719">
 		<set-variable value="#[attributes.uriParams.flightId]" doc:name="flightId" doc:id="755bb614-870d-432b-a946-12a0ae826cf0" variableName="flightId"/>
 		<db:select doc:name="Select flight" doc:id="51772ea4-5009-4f9d-862a-b64df44d24fd" config-ref="Database_Config">
 			<db:sql ><![CDATA[SELECT * FROM american

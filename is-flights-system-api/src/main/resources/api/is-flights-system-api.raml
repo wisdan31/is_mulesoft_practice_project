@@ -1,8 +1,6 @@
 #%RAML 1.0
 title: Flights System API
 version: v1
-baseUri: /american-flights-sa/api/v1
-mediaType: application/json
 
 types:
   Flight: !include datatypes/Flight.raml
@@ -12,6 +10,11 @@ types:
     queryParameters:
       destination?:
         type: string
+        enum: ["SFO", "LAX", "CLE"]
+        displayName: Flight Destination
+        description: IATA code of the airport where the flight is scheduled to arrive.
+        example: "LAX"
+
     responses:
       200:
         body:
@@ -24,5 +27,6 @@ types:
       responses:
         200:
           body:
-            type: Flight
-            example: !include examples/flight-example.json
+            application/json:
+              type: Flight
+              example: !include examples/flight-example.json
