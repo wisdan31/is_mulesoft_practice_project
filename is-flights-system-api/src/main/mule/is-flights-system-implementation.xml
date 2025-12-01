@@ -40,7 +40,7 @@ payload map ( payload01 , indexOfPayload01 ) -> {
 		</ee:transform>
 		<error-handler >
 			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="5f85880e-3c12-4be3-a4bb-e07d3b6741ad" type="VALIDATION:INVALID_BOOLEAN">
-				<set-payload value='#[output application/json&#10;---&#10;{&#10;  "message": error.description&#10;}]' doc:name="error.message" doc:id="772dbfa5-31a2-49f2-9105-6656d11d505e" />
+				<set-payload value='#[output application/json --- { "message": error.description }]' doc:name="error.message" doc:id="772dbfa5-31a2-49f2-9105-6656d11d505e" />
 				<set-variable value="400" doc:name="httpStatus" doc:id="e43d388e-3ea4-4dd7-a4a9-4908b04791c4" variableName="httpStatus"/>
 			</on-error-propagate>
 		</error-handler>
@@ -76,7 +76,7 @@ payload map (flight) -> {
 		</ee:transform>
 		<error-handler >
 			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="69eff4d0-d73d-4a5d-bbd6-4dc2aacb19f2" >
-				<set-payload value='#[output application/json&#10;---&#10;{&#10;  "message": error.description&#10;}]' doc:name="Set Payload" doc:id="46a33ea1-7aae-4f71-ba6b-7044265d4d62" />
+				<set-payload value='#[output application/json --- { "message": error.description }]' doc:name="error.message" doc:id="46a33ea1-7aae-4f71-ba6b-7044265d4d62" />
 				<set-variable value="404" doc:name="httpStatus" doc:id="ac3bf372-38d7-4b55-9505-3c436644f88f" variableName="httpStatus"/>
 			</on-error-propagate>
 		</error-handler>
