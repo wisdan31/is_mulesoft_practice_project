@@ -13,4 +13,5 @@ http://www.mulesoft.org/schema/mule/american-flights-api http://www.mulesoft.org
 	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="1438c845-5d6a-4534-a318-a40578733f8a" basePath="/american-flights-sa">
 		<http:listener-connection host="localhost" port="${http.port}" />
 	</http:listener-config>
+	<global-property doc:name="Global Property" doc:id="5bec7e04-bf04-4c63-aa81-6a6563cfb6c5" name="env" value="local" />
 </mule>
