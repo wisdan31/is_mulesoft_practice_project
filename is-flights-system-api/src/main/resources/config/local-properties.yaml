@@ -1,3 +1,7 @@
+api:
+  basepath: "is-flights-sa/api/${api.version}"
+  version: "v1"
+
 http:
   host: "localhost"
   port: "8089"
