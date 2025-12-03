@@ -14,4 +14,14 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 }]]]></http:query-params>
 		</http:request>
 	</sub-flow>
+	<sub-flow name="getFlightById" doc:id="8f86c9c6-a5e9-4c74-9ead-adf6f1735e79" >
+		<set-variable value="#[attributes.uriParams.flightId]" doc:name="flightId" doc:id="8014df1d-989c-4048-869f-a12805fc65d7" variableName="flightId" />
+		<http:request method="GET" doc:name="GET sa /flights" doc:id="f6bd4e7f-df72-4a21-ab30-e0d84a165443" config-ref="HTTP_System_Api_config" path="/flights/{Id}" >
+			<http:uri-params ><![CDATA[#[output application/java
+---
+{
+	Id : vars.flightId
+}]]]></http:uri-params>
+		</http:request>
+	</sub-flow>
 </mule>
