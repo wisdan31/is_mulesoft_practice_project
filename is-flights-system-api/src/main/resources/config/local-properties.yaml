@@ -1,10 +1,10 @@
 api:
-  basepath: "is-flights-pa/api/${api.version}"
+  basepath: "is-flights-sa/api/${api.version}"
   version: "v1"
 
 http:
   host: "localhost"
-  port: "8088"
+  port: "8089"
 
 db:
   host: "mudb.mule-training.com"
