@@ -5,6 +5,13 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
 	<sub-flow name="getFlights" doc:id="cac18073-697e-4ddd-8693-21b49ba8d8c5" >
-		<http:request method="GET" doc:name="GET sa /flights" doc:id="c9caf679-5141-45fc-820f-8ccefada0228" config-ref="HTTP_System_Api_config" path="/flights"/>
+		<set-variable value="#[message.attributes.queryParams.destination]" doc:name="destination" doc:id="465179e4-4d8b-49d7-9928-8ef6ed47720b" variableName="destination" />
+		<http:request method="GET" doc:name="GET sa /flights" doc:id="c9caf679-5141-45fc-820f-8ccefada0228" config-ref="HTTP_System_Api_config" path="/flights">
+			<http:query-params ><![CDATA[#[output application/java
+---
+{
+	("destination": vars.destination) if (!isEmpty(vars.destination))
+}]]]></http:query-params>
+		</http:request>
 	</sub-flow>
 </mule>
