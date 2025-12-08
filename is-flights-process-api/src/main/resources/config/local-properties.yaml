@@ -18,3 +18,4 @@ system-api:
   port: "8089"
   basepath: "is-flights-sa/api/${system-api.version}"
   version: "v1"
+  timeout: "180000" 
