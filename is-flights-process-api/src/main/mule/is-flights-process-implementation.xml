@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:validation="http://www.mulesoft.org/schema/mule/validation" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd">
+	<sub-flow name="getFlights" doc:id="cac18073-697e-4ddd-8693-21b49ba8d8c5" >
+		<set-variable value="#[message.attributes.queryParams.destination]" doc:name="destination" doc:id="465179e4-4d8b-49d7-9928-8ef6ed47720b" variableName="destination" />
+		<http:request method="GET" doc:name="GET sa /flights" doc:id="c9caf679-5141-45fc-820f-8ccefada0228" config-ref="HTTP_System_Api_config" path="/flights">
+			<http:query-params ><![CDATA[#[output application/java
+---
+{
+	("destination": vars.destination) if (!isEmpty(vars.destination))
+}]]]></http:query-params>
+		</http:request>
+	</sub-flow>
+	<flow name="getFlightById" doc:id="5b96a899-2055-4266-8815-584fcc90f184">
+		<set-variable value="#[attributes.uriParams.flightId]" doc:name="flightId" doc:id="42ea4d8c-82a1-4809-bbd0-ce133f3f2bef" variableName="flightId" />
+		<http:request method="GET" doc:name="GET sa /flights" doc:id="bf672119-bcf3-4c34-bc29-18b704197951" config-ref="HTTP_System_Api_config" path="/flights/{Id}">
+			<http:uri-params><![CDATA[#[output application/java
+---
+{
+	Id : vars.flightId
+}]]]></http:uri-params>
+		</http:request>
+		<error-handler>
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="89e0508b-3345-48b1-a726-4a89a9ab6119">
+				<set-payload value='#[output application/json --- { "message": error.description }]' doc:name="error.message" doc:id="4e2df17b-c734-4416-842f-788f524a6df7" />
+				<set-variable value="404" doc:name="httpStatus" doc:id="0294b3cf-5385-462f-ad95-f68efd74521b" variableName="httpStatus" />
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+</mule>
