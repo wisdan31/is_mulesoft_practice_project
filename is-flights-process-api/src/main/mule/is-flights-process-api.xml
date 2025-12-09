@@ -93,7 +93,7 @@ output application/json
         </error-handler>
     </flow>
     <flow name="is-flights-process-api-console">
-        <http:listener path="/console/*" config-ref="HTTP_Listener_config">
+        <http:listener path="/${api.basepath}/console/*" config-ref="HTTP_Listener_config">
             <http:response statusCode="#[vars.httpStatus default 200]">
                 <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
             </http:response>
