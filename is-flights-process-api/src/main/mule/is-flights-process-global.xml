@@ -14,4 +14,5 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 	<http:request-config name="HTTP_System_Api_config" doc:name="HTTP Request configuration" doc:id="aa623a8e-4899-4c2c-940b-b570a8d7bfc3" basePath="${system-api.basepath}" responseTimeout="${system-api.timeout}">
 		<http:request-connection host="${system-api.host}" port="${system-api.port}" connectionIdleTimeout="9999999"/>
 	</http:request-config>
+	<global-property doc:name="Global Property" doc:id="0bdae9b3-1828-427c-a647-4cdc398957c7" name="env" value="local" />
 </mule>
