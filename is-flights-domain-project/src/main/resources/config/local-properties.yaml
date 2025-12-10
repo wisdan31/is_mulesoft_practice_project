@@ -1,3 +1,4 @@
 http:
-  host: "localhost"
-  port: "8089"
+  listener:
+    host: "localhost"
+    port: "8089"

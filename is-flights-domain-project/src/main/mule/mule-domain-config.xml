@@ -11,7 +11,7 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 
     <!-- configure here resource to be shared within the domain -->
 	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="85beeeb6-babd-4034-8846-37c1f500f939" >
-		<http:listener-connection host="${http.host}" port="${http.port}" />
+		<http:listener-connection host="${http.listener.host}" port="${http.listener.port}" />
 	</http:listener-config>
 	<configuration-properties doc:name="Configuration properties" doc:id="06ec5134-f05c-4e3d-96ad-9b16a5636fe7" file="config/${env}-properties.yaml" />
 	<global-property doc:name="Global Property" doc:id="4892294d-0f03-4fd4-816b-0ef6e35f4908" name="env" value="local" />
