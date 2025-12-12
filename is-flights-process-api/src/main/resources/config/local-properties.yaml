@@ -1,17 +1,6 @@
 api:
   basepath: "is-flights-pa/api/${api.version}"
   version: "v1"
-
-http:
-  host: "localhost"
-  port: "8088"
-
-db:
-  host: "mudb.mule-training.com"
-  port: "3306"
-  user: "mule"
-  password: "mule"
-  database: "training"
   
 system-api:
   host: "localhost"

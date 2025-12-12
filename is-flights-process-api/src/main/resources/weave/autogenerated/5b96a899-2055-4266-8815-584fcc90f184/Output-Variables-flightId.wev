@@ -1,0 +1,4 @@
+%dw 2.0
+
+type auto_5b96a899_2055_4266_8815_584fcc90f184_Output_Variables_flightId = Any
+
